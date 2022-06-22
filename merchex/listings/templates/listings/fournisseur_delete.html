@@ -1,0 +1,14 @@
+{% extends 'top.html' %}
+{% block title %}Suppression Fournisseur{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Supprimer le fournisseur</h1>
+  <p>Etes-vous sur de vouloir supprimer le produit: {{fournisseur.get_nom_display}}</p>
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Supprimer" class="btn btn-danger">
+    </form>
+
+</div>
+{% endblock %}
+

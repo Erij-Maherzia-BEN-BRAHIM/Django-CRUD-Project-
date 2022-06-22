@@ -1,0 +1,13 @@
+{% extends 'top.html' %}
+{% block title %}Update Product{% endblock %}
+{% block content %}
+<div class="container">
+<h1>Mettre à jour un produit</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Envoyer" class="btn btn-success">
+  </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,20 @@
+body {
+    background-image: url("https://www.onthebox.com/wp-content/uploads/2017/08/Greg-wallace-955x494.jpg");
+    background-position: center ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: rgba(0, 0, 0, .5);
+}
+.cont {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: rgba(0, 0, 0, .5);
+    }
+#a-propos{
+
+    font-size: 1.2rem;
+}
