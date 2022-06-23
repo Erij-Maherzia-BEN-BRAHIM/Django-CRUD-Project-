@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 from django.db import models
 
 class Fournisseur(models.Model):
@@ -23,11 +22,10 @@ class Produit(models.Model):
     (BINTO,"Binto")
     ]
     nomProduit=models.CharField(max_length=100,choices=MARQUES)
-    image=models.ImageField(upload_to='static/')
+    image=models.ImageField(upload_to='static/',blank=True)
     prixAchat=models.FloatField(default=0)
     prixVente=models.FloatField(default=0)
     quantiteEnStock=models.IntegerField(default=0)
     fournisseur=models.ForeignKey('Fournisseur', on_delete=models.CASCADE)
     def __str__(self) :
             return f'{self.nomProduit} '
-        

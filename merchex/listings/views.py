@@ -3,43 +3,48 @@ from django.shortcuts import redirect, render
 from listings.forms import ContactUsForm, FournisseurForm, ProduitForm
 from listings.models import Fournisseur, Produit
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 
-def index(request):
-    return render(request,'listings/index.html')
+@login_required
+def welcome(request):
+    return render(request,'listings/welcome.html')
+@login_required
 def fournisseur_list(request):
     fournisseurs = Fournisseur.objects.all()
     return render(request,'listings/fournisseur_list.html',{'fournisseurs':fournisseurs})
-
+@login_required
 def fournisseur_detail(request,id):
     fournisseur= Fournisseur.objects.get(id=id)
     return render(request, 'listings/fournisseur_detail.html',{'fournisseur':fournisseur})
 
+@login_required
 def produit_list(request):
     produits= Produit.objects.all()
     return render(request, 'listings/produit_list.html', {'produits':produits})
-
+@login_required
 def produit_detail(request,id):
     produit = Produit.objects.get(id=id)
     return render(request, 'listings/produit_detail.html',{'produit':produit})
+
+@login_required    
 def aPropos(request):
     return render(request, 'listings/a_propos.html' )
+
+@login_required
 def fournisseur_create(request):
     if request.method == 'POST':
         form = FournisseurForm(request.POST)
         if form.is_valid():
             fournisseur = form.save()
             return redirect('fournisseur-detail', fournisseur.id)
-
     else:
         form = FournisseurForm()
+    return render(request, 'listings/fournisseur_create.html',  {'form': form})
 
-    return render(request,
-            'listings/fournisseur_create.html',
-            {'form': form})
-
+@login_required
 def produit_create(request):
     if request.method == 'POST':
-        form = ProduitForm(request.POST)
+        form = ProduitForm(request.POST, request.FILES)
         if form.is_valid():
             produit = form.save()
             return redirect('produit-detail', produit.id)
@@ -51,6 +56,7 @@ def produit_create(request):
             'listings/produit_create.html',
             {'form': form})
 
+@login_required
 def produit_update(request, id):
     produit= Produit.objects.get(id=id)
 
@@ -64,6 +70,7 @@ def produit_update(request, id):
         form = ProduitForm(instance=produit)
     return render(request, 'listings/produit_update.html', {'form': form})
 
+@login_required
 def fournisseur_update(request, id):
     fournisseur = Fournisseur.objects.get(id=id)
 
@@ -78,6 +85,7 @@ def fournisseur_update(request, id):
 
     return render(request, 'listings/fournisseur_update.html', {'form': form})
 
+@login_required
 def produit_delete(request,id):
     produit= Produit.objects.get(id=id)
     if request.method=='POST':
@@ -85,6 +93,7 @@ def produit_delete(request,id):
         return redirect('produit-list')
     return render(request, 'listings/produit_delete.html', {'produit': produit})
 
+@login_required
 def fournisseur_delete(request,id):
     fournisseur= Fournisseur.objects.get(id=id)
     if request.method=='POST':
@@ -92,12 +101,7 @@ def fournisseur_delete(request,id):
         return redirect('fournisseur-list')
     return render(request, 'listings/fournisseur_delete.html', {'fournisseur': fournisseur})
 
-
-
-
-
-
-
+@login_required
 def contact(request):
     if request.method == 'POST':
         # créer une instance de notre formulaire et le remplir avec les données POST

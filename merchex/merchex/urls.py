@@ -14,11 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from listings import views
+from django.contrib.auth.views import LoginView , LogoutView , PasswordChangeDoneView, PasswordChangeView
+import authentification.views
+
+
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('welcome/', views.welcome, name='welcome'),
     path('admin/', admin.site.urls),
+    path('', LoginView.as_view(
+        template_name='authentification/login.html',
+        redirect_authenticated_user=True),
+         name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('change-password/', PasswordChangeView.as_view(
+        template_name='authentification/password_change_form.html'),
+         name='password_change'
+         ),
+    path('change-password-done/', PasswordChangeDoneView.as_view(
+        template_name='authentification/password_change_done.html'),
+         name='password_change_done'
+         ),
+    path('signup/', authentification.views.signup_page, name='signup'),
     path('fournisseurs/', views.fournisseur_list , name='fournisseur-list'),
     path('fournisseurs/<int:id>/', views.fournisseur_detail, name='fournisseur-detail'),
     path('fournisseurs/<int:id>/update/', views.fournisseur_update, name='fournisseur-update'),
@@ -31,5 +49,5 @@ urlpatterns = [
     path('produits/<int:id>/delete/', views.produit_delete, name='produit-delete'),
     path('contact-us/', views.contact, name='contact'),
     path('a-propos/', views.aPropos, name='a-propos'),
-    path('Authentification/', include('accounts.urls'))
+  
 ]

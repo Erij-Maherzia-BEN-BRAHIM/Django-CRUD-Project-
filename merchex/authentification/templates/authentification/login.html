@@ -1,0 +1,14 @@
+{% extends 'top.html' %}
+{% block title %}Log In{% endblock %}
+{% block content %}
+<div class="container" style="padding-top: 15vh;">
+<h2>Login</h2>
+<p>{{message}}</p>
+<form method="post" class="form-control">
+{% csrf_token %}
+{{ form }}
+<button type="submit" class="btn btn-outline-dark rounded-pill ms-5">Login</button>
+</form>
+<p>You don't have an account? <a href="{% url 'signup' %}" class="btn btn-success">Sign Up Now!</a></p>
+</div>
+{% endblock %}
