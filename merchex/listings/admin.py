@@ -1,5 +1,5 @@
 from django.contrib import admin
-from listings.models import Fournisseur , Produit
+from listings.models import *
 # Register your models here.
 
 #admin.site.register(Listing)
@@ -9,5 +9,9 @@ class FournisseurAdmin(admin.ModelAdmin):
 admin.site.register(Fournisseur, FournisseurAdmin)
 
 class ProduitAdmin(admin.ModelAdmin):
-    list_display= ('nomProduit','quantiteEnStock')
-admin.site.register(Produit, ProduitAdmin)
+    list_display= ('name','price')
+admin.site.register(Product, ProduitAdmin)
+
+
+admin.site.register(Order)
+admin.site.register(Cart)

@@ -1,9 +1,10 @@
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+
+from django.shortcuts import redirect, render, get_object_or_404
 from listings.forms import ContactUsForm, FournisseurForm, ProduitForm
-from listings.models import Fournisseur, Produit
+from listings.models import *
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def welcome(request):
@@ -19,12 +20,12 @@ def fournisseur_detail(request,id):
 
 @login_required
 def produit_list(request):
-    produits= Produit.objects.all()
-    return render(request, 'listings/produit_list.html', {'produits':produits})
+    products= Product.objects.all()
+    return render(request, 'listings/produit_list.html', {'products':products})
 @login_required
-def produit_detail(request,id):
-    produit = Produit.objects.get(id=id)
-    return render(request, 'listings/produit_detail.html',{'produit':produit})
+def produit_detail(request,slug):
+    product=get_object_or_404(Product, slug=slug)
+    return render(request, 'listings/produit_detail.html',context={"product":product})
 
 @login_required    
 def aPropos(request):
@@ -41,24 +42,23 @@ def fournisseur_create(request):
         form = FournisseurForm()
     return render(request, 'listings/fournisseur_create.html',  {'form': form})
 
-@login_required
+""" @login_required
 def produit_create(request):
     if request.method == 'POST':
         form = ProduitForm(request.POST, request.FILES)
         if form.is_valid():
             produit = form.save()
-            return redirect('produit-detail', produit.id)
+            return redirect('produit-detail', produit.slug)
 
     else:
         form = ProduitForm()
 
     return render(request,
-            'listings/produit_create.html',
-            {'form': form})
-
-@login_required
+            'listings/produit_create.html', {'form': form})
+ """
+""" @login_required
 def produit_update(request, id):
-    produit= Produit.objects.get(id=id)
+    produit= Product.objects.get(id=id)
 
     if request.method =='POST':
         form = ProduitForm(request.POST , instance=produit) #on pré-remplir le formulaire avec un pdt existant   
@@ -69,7 +69,7 @@ def produit_update(request, id):
     else:
         form = ProduitForm(instance=produit)
     return render(request, 'listings/produit_update.html', {'form': form})
-
+ """
 @login_required
 def fournisseur_update(request, id):
     fournisseur = Fournisseur.objects.get(id=id)
@@ -86,12 +86,12 @@ def fournisseur_update(request, id):
     return render(request, 'listings/fournisseur_update.html', {'form': form})
 
 @login_required
-def produit_delete(request,id):
-    produit= Produit.objects.get(id=id)
+def produit_delete(request,slug):
+    product= Product.objects.get(slug=slug)
     if request.method=='POST':
-        produit.delete()
+        product.delete()
         return redirect('produit-list')
-    return render(request, 'listings/produit_delete.html', {'produit': produit})
+    return render(request, 'listings/produit_delete.html', {'product': product})
 
 @login_required
 def fournisseur_delete(request,id):
@@ -124,3 +124,33 @@ def contact(request):
     return render(request,
                 'listings/contact.html',
                 {'form': form})
+
+def checkout(request):
+    return render(request, 'listings/checkout.html')
+
+def add_to_cart(request, slug):
+    user=request.user
+    product=get_object_or_404(Product, slug=slug)
+    cart, _ = Cart.objects.get_or_create(user=user)
+    order , created=Order.objects.get_or_create(user=user,ordered=False, product=product)
+    if created:
+        cart.orders.add(order)
+        cart.save()
+    else:
+        order.quantity+=1
+        order.save()
+    return  redirect(reverse("product", kwargs={"slug":slug})) 
+def cart(request):
+    cart=get_object_or_404(Cart,user=request.user)
+    return render(request, 'listings/cart.html', context={"orders":cart.orders.all()})
+def cart_delete(request):
+    cart=request.user.cart
+    if cart:
+        cart.delete()
+    return redirect('welcome')
+
+def etat_de_stock(request):
+    if Product.stock>0:
+        etat="en stock"
+    else: etat="hors stock"
+    return render(request, context={"etat": etat})

@@ -7,7 +7,6 @@ from . import forms
 """ class LoginPageView(View):
     template_name = 'authentification/login.html'
     form_class = forms.LoginForm
-
     def get(self, request):
         form = self.form_class()
         message = ''

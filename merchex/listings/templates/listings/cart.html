@@ -1,0 +1,44 @@
+{% extends 'top.html' %}
+{% block title %}Panier{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+    <p class="h1"> Panier</p>
+  </div>
+  <div class="col-6">
+    <a href="{%url 'cart-delete' %}" class="btn btn-danger rounded-pill">Vider le panier et annuler toute la commande</a>
+  </div>
+</div>
+<table class="table bg-light">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Image</th>
+        <th scope="col">Product</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity ordered</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    {% for order in orders %}
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td><img src="/{{order.product.image}}" alt="" width="40vh"></td>
+        <td>{{order.product.get_name_display}}</td>
+        <td>{{order.product.price}}</td>
+        <td>{{order.quantity}}</td>
+        <td>{{order.get_total}}</td>
+      </tr>
+      {% endfor %}
+<tr>
+  <th>Total panier</th>
+  <td>{{cart.get_total_cart}} dinars</td>
+</tr>
+    </tbody>
+  </table>
+
+
+</div>
+{% endblock %}

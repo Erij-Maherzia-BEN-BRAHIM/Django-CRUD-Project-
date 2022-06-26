@@ -14,14 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from listings import views
+from django.urls import include, path
+from listings.views import *
 from django.contrib.auth.views import LoginView , LogoutView , PasswordChangeDoneView, PasswordChangeView
 import authentification.views
 
 
 urlpatterns = [
-    path('welcome/', views.welcome, name='welcome'),
+    path('welcome/', welcome, name='welcome'),
     path('admin/', admin.site.urls),
     path('', LoginView.as_view(
         template_name='authentification/login.html',
@@ -37,17 +37,20 @@ urlpatterns = [
          name='password_change_done'
          ),
     path('signup/', authentification.views.signup_page, name='signup'),
-    path('fournisseurs/', views.fournisseur_list , name='fournisseur-list'),
-    path('fournisseurs/<int:id>/', views.fournisseur_detail, name='fournisseur-detail'),
-    path('fournisseurs/<int:id>/update/', views.fournisseur_update, name='fournisseur-update'),
-    path('fournisseurs/<int:id>/delete/', views.fournisseur_delete, name='fournisseur-delete'),
-    path('fournisseurs/add/', views.fournisseur_create , name='fournisseur-create'),
-    path('produits/', views.produit_list, name='produit-list'),
-    path('produits/<int:id>/', views.produit_detail, name='produit-detail'),
-    path('produits/<int:id>/update/', views.produit_update, name='produit-update'),
-    path('produits/add/', views.produit_create , name='produit-create'),
-    path('produits/<int:id>/delete/', views.produit_delete, name='produit-delete'),
-    path('contact-us/', views.contact, name='contact'),
-    path('a-propos/', views.aPropos, name='a-propos'),
-  
+    path('fournisseurs/', fournisseur_list , name='fournisseur-list'),
+    path('fournisseurs/<int:id>/', fournisseur_detail, name='fournisseur-detail'),
+    path('fournisseurs/<int:id>/update/', fournisseur_update, name='fournisseur-update'),
+    path('fournisseurs/<int:id>/delete/', fournisseur_delete, name='fournisseur-delete'),
+    path('fournisseurs/add/', fournisseur_create , name='fournisseur-create'),
+    path('product/', produit_list, name='product-list'),
+    path('product/<str:slug>/', produit_detail, name='product'),
+    path('product/<str:slug>/add-to-cart/', add_to_cart, name='add-to-cart'),
+    #path('produits/<str:slug>/update/', produit_update, name='product-update'),
+    #path('produits/add/', produit_create , name='produit-create'),
+    path('product/<str:slug>/delete/', produit_delete, name='product-delete'),
+    path('contact-us/', contact, name='contact'),
+    path('a-propos/', aPropos, name='a-propos'),
+    path('cart/', cart, name='cart'),
+    path('cart/delete', cart_delete, name='cart-delete'),
+
 ]
